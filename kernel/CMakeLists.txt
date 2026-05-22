@@ -17,9 +17,7 @@ target_compile_options(kernel.elf PRIVATE
         -Wextra
         -fno-exceptions
         -fno-rtti
-    >
-    $<$<COMPILE_LANGUAGE:ASM_NASM>:
-        -f elf32
+        -g
     >
 )
 
@@ -39,5 +37,12 @@ add_custom_target(run
   COMMAND qemu-system-i386 -kernel $<TARGET_FILE:kernel.elf>
   DEPENDS kernel.elf
   COMMENT "Lanzando QEMU"
+)
+
+add_custom_target(debug
+  COMMAND qemu-system-i386 -kernel $<TARGET_FILE:kernel.elf> -S -s &
+  COMMAND gdb -ex "target remote localhost:1234" -ex "set disassembly-flavor intel" -ex "symbol-file $<TARGET_FILE:kernel.elf>"
+  DEPENDS kernel.elf
+  COMMENT "Lanzando QEMU modo debug en puerto 1234"
 )
 
