@@ -1,4 +1,8 @@
 
+#include "drivers/serial.h"
+#include "drivers/vga.h"
+#include "arch/gdt.h"
+
 constexpr int BOOTINFO_MAGIC = 0xB007B007;
 
 class diego {
@@ -9,10 +13,17 @@ class diego {
 
 diego yo(28);
 
-extern "C" void kernel_main()
+extern "C" void kernel_main(void *multiboot_info)
 {
-  char *vga = reinterpret_cast<char *>(0xb8000);
-  *vga = 'X';
+  GDT::init();
+  vga::init();
+  uart::init();
+
+
+  int edad = 28;
+
+  uart::printf("Hola! Soy %s y tengo %d años, variable guardada en %p!\n", "Diego", edad, &edad);
+  uart::printf("Hola! Hablando desde la uart!\n");
 
   while (true);
 }

@@ -1,10 +1,11 @@
 set(SRCS
   entry.asm
   kernel.cpp
-)
-
-set_source_files_properties(entry.asm
-  PROPERTIES LANGUAGE ASM_NASM
+  printf.cpp
+  drivers/vga.cpp
+  drivers/serial.cpp
+  arch/asm.cpp
+  arch/gdt.cpp
 )
 
 add_executable(kernel.elf ${SRCS})
@@ -18,6 +19,7 @@ target_compile_options(kernel.elf PRIVATE
         -fno-exceptions
         -fno-rtti
         -g
+        -masm=intel
     >
 )
 
@@ -33,8 +35,12 @@ set_target_properties(kernel.elf PROPERTIES
   LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/linker.ld
 )
 
+target_include_directories(kernel.elf PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
 add_custom_target(run
-  COMMAND qemu-system-i386 -kernel $<TARGET_FILE:kernel.elf>
+  COMMAND qemu-system-i386 -kernel $<TARGET_FILE:kernel.elf> -serial stdio
   DEPENDS kernel.elf
   COMMENT "Lanzando QEMU"
 )
