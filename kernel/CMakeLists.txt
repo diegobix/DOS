@@ -2,10 +2,13 @@ set(SRCS
   entry.asm
   kernel.cpp
   printf.cpp
+  debug.cpp
   drivers/vga.cpp
   drivers/serial.cpp
   arch/asm.cpp
   arch/gdt.cpp
+  arch/isr_stubs.asm
+  arch/idt.cpp
 )
 
 add_executable(kernel.elf ${SRCS})

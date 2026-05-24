@@ -48,16 +48,24 @@ void init()
   table[0] = make_descriptor(0, 0, 0, 0);
 
   // Code segment
-  table[1] = make_descriptor(0, 0xFFFFFFFF, 0x9A, 0xC);
+  table[1] = make_descriptor(0, 0xFFFFF, 0x9A, 0xC);
 
   // Data segment 
-  table[2] = make_descriptor(0, 0xFFFFFFFF, 0x92, 0xC);
+  table[2] = make_descriptor(0, 0xFFFFF, 0x92, 0xC);
 
   gdtr.limit = sizeof(table) - 1;
   gdtr.base = reinterpret_cast<u32>(&table);
 
   asm volatile(
       "lgdt %[reg]\n"
+      "jmp 0x08:.reload_cs\n"
+      ".reload_cs:\n"
+      "mov ax, 0x10\n"
+      "mov ds, ax\n"
+      "mov es, ax\n"
+      "mov fs, ax\n"
+      "mov gs, ax\n"
+      "mov ss, ax\n"
       :
       : [reg] "m" (gdtr)
   );
