@@ -73,10 +73,10 @@ La paginación que se activa es una temporal para el arranque, por lo que por co
 Se mapean dos cosas:
 - Identity paging: Se mapean de forma identitaria las primeras direcciones (los 4 primeros MB). Esto hará que la dirección 0x00100000 virtual corresponda con la misma física.
 - High Half paging: Se mapean las direcciones a partir de 0xC0000000 a los primeros 4 MB físicos. Esto hará que la dirección 0xC0100000 virtual corresponda con la física 0x00100000.
-![e4ea2e22a35f58d8eebfecfda20e9667.png](:/1098f302f2a2476db176d862a4e4eeb4)
+<img width="720" height="181" alt="image" src="https://github.com/user-attachments/assets/7f9d27c3-8242-4921-bc89-3d04f7eb874d" />
 
 La idea de esto es que se tenga acceso a las direccioens bajas de memoria en el arranque de forma sencilla, por ejemplo para poder usar el buffer VGA sin complicación. Cuando el proceso de arranque esté suficientemente avanzado se elimina el identity paging para dejar solo el high half.
 La idea del High Half paging es que el kernel resida en las direcciones altas de la memoria virtual, de forma que los procesos de usuario ocupen el rango de direcciones bajo y tengan mapeado el kernel en la zona alta de memoria.
-![67694a67a103d8f6bace9caba18449d1.png](:/4c11aa3b43314861954e26de6f8d8cf9)
+<img width="217" height="416" alt="image" src="https://github.com/user-attachments/assets/edc9375b-a095-4ec4-be71-6f164a5f9b37" />
 
 Una vez se tiene activada la paginación se salta a kernel_entry_high para cambiar el EIP a direcciones altas. Tras ello se limpia la sección .bss y se salta a kernel_main, entrada del kernel ya en C++.
