@@ -19,7 +19,7 @@ constexpr u32 FLAG_VBE = 1 << 11;
 constexpr u32 FLAG_FRAMEBUFFER = 1 << 12;
 
 
-struct [[gnu::packed]] MutlibootInfo
+struct [[gnu::packed]] MultibootInfo
 {
   u32 flags;
   u32 mem_lower;
@@ -55,7 +55,9 @@ constexpr const char *MMAP_TYPES[] =
 
 constexpr const char *mmap_type_to_str(u32 type)
 {
-  return MMAP_TYPES[type];
+  return type <= 5 ? MMAP_TYPES[type-1] : "Unknown";
 };
+
+void print_mmap(const MultibootInfo *info);
 
 }

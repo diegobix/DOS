@@ -9,6 +9,7 @@ set(SRCS
   arch/gdt.cpp
   arch/isr_stubs.asm
   arch/idt.cpp
+  multiboot.cpp
 )
 
 add_executable(kernel.elf ${SRCS})
@@ -43,13 +44,13 @@ target_include_directories(kernel.elf PRIVATE
 )
 
 add_custom_target(run
-  COMMAND qemu-system-i386 -kernel $<TARGET_FILE:kernel.elf> -serial stdio
+  COMMAND qemu-system-i386 -kernel $<TARGET_FILE:kernel.elf> -serial stdio -m 4G
   DEPENDS kernel.elf
   COMMENT "Lanzando QEMU"
 )
 
 add_custom_target(debug
-  COMMAND qemu-system-i386 -kernel $<TARGET_FILE:kernel.elf> -S -s &
+  COMMAND qemu-system-i386 -kernel $<TARGET_FILE:kernel.elf> -S -s -m 4G &
   COMMAND gdb -ex "target remote localhost:1234" -ex "set disassembly-flavor intel" -ex "symbol-file $<TARGET_FILE:kernel.elf>"
   DEPENDS kernel.elf
   COMMENT "Lanzando QEMU modo debug en puerto 1234"

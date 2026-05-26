@@ -1,7 +1,7 @@
 
 #include "arch/idt.h"
 #include "debug.h"
-#include "drivers/multiboot.h"
+#include "multiboot.h"
 #include "drivers/serial.h"
 #include "drivers/vga.h"
 #include "arch/gdt.h"
@@ -16,7 +16,7 @@ class diego {
 
 diego yo(28);
 
-extern "C" void kernel_main(multiboot::MutlibootInfo *multiboot_info)
+extern "C" void kernel_main(multiboot::MultibootInfo *multiboot_info)
 {
   vga::init();
   uart::init();
@@ -37,6 +37,8 @@ extern "C" void kernel_main(multiboot::MutlibootInfo *multiboot_info)
   DEBUG::log("multiboot ptr: %p", multiboot_info);
 
   DEBUG::log("MutlibootInfo flags: %x", multiboot_info->flags);
+
+  multiboot::print_mmap(multiboot_info);
 
   while (true);
 }

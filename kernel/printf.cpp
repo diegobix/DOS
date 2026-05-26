@@ -47,8 +47,21 @@ void print_hex(PutcharFn putchar_fn, u32 n)
   }
 }
 
-  
+void print_hex(PutcharFn putchar_fn, u64 n)
+{
+  putchar_fn('0');
+  putchar_fn('x');
+
+  for (int i = 15; i >=0; i--)
+  {
+     u8 nibble = (n >> (i*4)) & 0xF;
+     char c = (nibble < 10) ? '0' + nibble : 'A' + nibble - 10;
+     putchar_fn(c);
+  }
 }
+
+  
+} // namespace anon
 
 void printf(PutcharFn putchar_fn, const char *fmt, va_list args)
 {
@@ -82,6 +95,10 @@ void printf(PutcharFn putchar_fn, const char *fmt, va_list args)
 
       case 'x':
         print_hex(putchar_fn, va_arg(args, u32));
+        break;
+
+      case 'X':
+        print_hex(putchar_fn, va_arg(args, u64));
         break;
 
       case '%':
