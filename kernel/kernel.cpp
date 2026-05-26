@@ -1,6 +1,7 @@
 
 #include "arch/idt.h"
 #include "debug.h"
+#include "drivers/multiboot.h"
 #include "drivers/serial.h"
 #include "drivers/vga.h"
 #include "arch/gdt.h"
@@ -15,7 +16,7 @@ class diego {
 
 diego yo(28);
 
-extern "C" void kernel_main(void *multiboot_info)
+extern "C" void kernel_main(multiboot::MutlibootInfo *multiboot_info)
 {
   vga::init();
   uart::init();
@@ -33,9 +34,9 @@ extern "C" void kernel_main(void *multiboot_info)
 
   vga::printf("Hello World!\nKernel DOS-DOS by Diego Arenas\n");
 
-  u32 *ptr = reinterpret_cast<u32 *>(0xDEAD1234);
-  u32 val = *ptr;
-  DEBUG::log("Val = %d\n", val);
+  DEBUG::log("multiboot ptr: %p", multiboot_info);
+
+  DEBUG::log("MutlibootInfo flags: %x", multiboot_info->flags);
 
   while (true);
 }

@@ -55,6 +55,7 @@ section .text
 extern __bss_start
 extern __bss_end
 kernel_entry_high:
+  pop ebx
   mov esp, __stack_top
 
   ; Clean bss
@@ -64,6 +65,7 @@ kernel_entry_high:
   xor eax, eax
   rep stosb
 
+  push ebx
   call kernel_main
 
   cli
