@@ -60,4 +60,54 @@ constexpr const char *mmap_type_to_str(u32 type)
 
 void print_mmap(const MultibootInfo *info);
 
+class MMap
+{
+private:
+  MemoryMapEntry *m_begin;
+  MemoryMapEntry *m_end;
+
+public:
+  class iterator
+  {
+    private:
+      MemoryMapEntry *m_entry = nullptr;
+
+    public:
+      iterator() = delete;
+      explicit iterator(MemoryMapEntry *mmap) : m_entry(mmap) {};
+
+      MemoryMapEntry& operator*() {return *m_entry;}
+      MemoryMapEntry* operator->(){return m_entry;}
+
+      iterator& operator++() {
+        m_entry = reinterpret_cast<MemoryMapEntry *>(
+          reinterpret_cast<u32>(m_entry) + m_entry->size + sizeof(m_entry->size)
+        );
+        return *this;
+      }
+
+      bool operator!=(const iterator &other) const {
+        return m_entry != other.m_entry;
+      }
+  };
+
+  explicit MMap(MultibootInfo *info);
+
+  iterator begin() {return iterator(m_begin);}
+  iterator end()   {return iterator(m_end);}
+
+  MMap() = delete;
+  MMap(const MMap &) = delete;
+  void operator=(const MMap &) = delete;
+  MMap(MMap &&) = delete;
+  void operator=(MMap &&) = delete;
+
+  constexpr static u32 AVAILABLE = 1;
+  constexpr static u32 RESERVED  = 2;
+  constexpr static u32 ACPI      = 3;
+  constexpr static u32 NVS       = 4;
+  constexpr static u32 BADRAM    = 5;
+
+};
+
 }

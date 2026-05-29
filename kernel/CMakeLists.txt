@@ -10,6 +10,8 @@ set(SRCS
   arch/isr_stubs.asm
   arch/idt.cpp
   multiboot.cpp
+  memory/phys.cpp
+  memory/paging.cpp
 )
 
 add_executable(kernel.elf ${SRCS})

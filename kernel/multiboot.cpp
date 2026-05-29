@@ -1,6 +1,7 @@
 #include "multiboot.h"
 
 #include "debug.h"
+#include "types.h"
 
 namespace
 {
@@ -37,6 +38,13 @@ void print_mmap(const MultibootInfo *info)
       reinterpret_cast<u32>(entry) + entry->size + sizeof(entry->size)
     );
   }
+}
+
+MMap::MMap(MultibootInfo *info)
+  : m_begin(reinterpret_cast<MemoryMapEntry*>(phys_to_virt(info->mmap_addr)))
+  , m_end(reinterpret_cast<MemoryMapEntry*>(phys_to_virt(info->mmap_addr) + info->mmap_len))
+{
+
 }
 
 }
